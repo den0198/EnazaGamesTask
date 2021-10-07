@@ -21,10 +21,13 @@ namespace EnazaGamesTask
             #region Infrastructure
 
             services.AddControllers();
+            services.AddAuth(_configuration);
             services.AddSwagger();
+            services.AddEntityFramework(_configuration);
+            services.AddAllOptions(_configuration);
 
             #endregion
-            
+
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,11 +36,12 @@ namespace EnazaGamesTask
             
             app.UseAppSwagger();
             app.UseHttpsRedirection();
+            app.UseAuth();
             app.UseAppRouting();
-            app.UseAuthorization();
-            
+
             #endregion
             
+            app.InitializationDatabase();
         }
     }
 }
