@@ -18,13 +18,11 @@ namespace BLL.Services
     public class AuthService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<UserGroup> _roleManager;
         private readonly AuthOptions _authOptions;
 
         public AuthService(UserManager<User> userManager, RoleManager<UserGroup> roleManager, IOptions<AuthOptions> authOptions)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _authOptions = authOptions.Value;
         }
 
