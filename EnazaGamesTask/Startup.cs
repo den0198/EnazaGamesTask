@@ -25,6 +25,7 @@ namespace EnazaGamesTask
             services.AddSwagger();
             services.AddEntityFramework(_configuration);
             services.AddAllOptions(_configuration);
+            services.AddBllServices();
 
             #endregion
 
@@ -34,9 +35,9 @@ namespace EnazaGamesTask
         {
             #region Infrastructure
             
-            app.UseAppSwagger();
             app.UseHttpsRedirection();
             app.UseAuth();
+            app.UseAppSwagger();
             app.UseAppRouting();
 
             #endregion

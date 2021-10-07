@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Enums;
+using EnazaGamesTask.Attributes;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace EnazaGamesTask.Controllers
 {
@@ -8,6 +11,7 @@ namespace EnazaGamesTask.Controllers
     {
         [HttpGet]
         [Route("GetAllUsers")]
+        [AuthorizeUserGroup(GroupCodesEnum.Admin)]
         public string GetAllUsers() => "test";
         
     }

@@ -12,7 +12,7 @@ namespace DAL.EntityFramework
         
         #region Entities
 
-        private DbSet<UserState> UserStates { get; set; }
+        public DbSet<UserState> UserStates { get; set; }
 
         #endregion
         
