@@ -10,6 +10,12 @@ namespace DAL.EntityFramework
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
         
+        #region Entities
+
+        private DbSet<UserState> UserStates { get; set; }
+
+        #endregion
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

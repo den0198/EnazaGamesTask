@@ -11,8 +11,12 @@ namespace DAL.Configurations
             builder
                 .HasOne(b => b.UserGroup)
                 .WithMany(i => i.Users)
-                .HasForeignKey(i => i.UserGroupId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(b => b.UserGroupId);
+
+            builder
+                .HasOne(b => b.UserState)
+                .WithMany(i => i.Users)
+                .HasForeignKey(b => b.UserStateId);
 
             builder.ToTable("User");
         }

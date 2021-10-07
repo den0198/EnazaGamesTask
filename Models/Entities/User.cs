@@ -10,6 +10,7 @@ namespace Models.Entities
         public DateTime CreatedDate { get; set; }
         public int UserStateId { get; set; }
         public int UserGroupId { get; set; }
+        public virtual UserState UserState { get; set; }
         public virtual UserGroup UserGroup { get; set; }
     }
 }
