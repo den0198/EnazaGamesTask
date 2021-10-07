@@ -21,12 +21,12 @@ namespace EnazaGamesTask
             #region Infrastructure
 
             services.AddControllers();
-            services.AddAuth(_configuration);
-            services.AddSwagger();
             services.AddEntityFramework(_configuration);
+            services.AddAuth(_configuration);
             services.AddAllOptions(_configuration);
             services.AddBllServices();
-
+            services.AddSwagger();
+            
             #endregion
 
         }

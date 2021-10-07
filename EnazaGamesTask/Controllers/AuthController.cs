@@ -20,5 +20,10 @@ namespace EnazaGamesTask.Controllers
         [Route("SignIn")]
         public async Task<TokenResponse> SignIn(SignInRequest request) => 
             await _authService.SignIn(request);
+        
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<TokenResponse> RefreshToken(RefreshTokenRequest request) => 
+            await _authService.RefreshToken(request);
     }
 }

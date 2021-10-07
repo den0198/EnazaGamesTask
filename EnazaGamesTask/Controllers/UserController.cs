@@ -7,11 +7,12 @@ namespace EnazaGamesTask.Controllers
 {
     [ApiController]
     [Route("api/user")]
+    [AuthorizeUserGroup(GroupCodesEnum.Admin)]
     public class UserController : ControllerBase
     {
         [HttpGet]
         [Route("GetAllUsers")]
-        [AuthorizeUserGroup(GroupCodesEnum.Admin)]
+        
         public string GetAllUsers() => "test";
         
     }

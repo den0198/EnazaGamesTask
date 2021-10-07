@@ -7,6 +7,7 @@ using System.Linq;
 using Common.HelpersClasses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Models.DTOs.Requests;
 using Models.DTOs.Responses;
 using Models.Entities;
@@ -37,6 +38,32 @@ namespace BLL.Services
             if (!await _userManager.CheckPasswordAsync(user, request.Password))
                 throw new Exception("Login or Password is not correct");    
             
+            return await getTokenBase(user);
+        }
+
+        public async Task<TokenResponse> RefreshToken(RefreshTokenRequest request)
+        {
+            var userInfo = getAccountInfoByOldToken(request.AccessToken);
+            
+            if (userInfo == null)
+                throw new Exception("Access token is invalid");
+            
+            var userLogin = userInfo.Claims
+                .Where(_ => _.Type.Contains("email"))
+                .Select(_ => _.Value)
+                .FirstOrDefault();
+            
+            var user = await _userManager.FindByNameAsync(userLogin);
+            
+            if (user == null)
+                throw new Exception("UserDetails is not system");
+            
+            var isTokenValid = await _userManager.VerifyUserTokenAsync(user,
+                _authOptions.Audience, "RefreshToken", request.RefreshToken);
+            
+            if (!isTokenValid)
+                throw new Exception("Refresh token is invalid");
+                    
             return await getTokenBase(user);
         }
         
@@ -76,6 +103,28 @@ namespace BLL.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
+        private ClaimsPrincipal getAccountInfoByOldToken(string oldAccessToken)
+        {
+            var tokenValidationParameters = getTokenValidationParameters();
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var userInfo = jwtHandler.ValidateToken(oldAccessToken,
+                tokenValidationParameters, out var securityToken);
 
+            return securityToken is JwtSecurityToken ? userInfo : null;
+        }
+        
+        private TokenValidationParameters getTokenValidationParameters () =>
+            new TokenValidationParameters
+            {
+                ValidIssuer = _authOptions.Issuer,
+                ValidateIssuer = true,
+                ValidAudience = _authOptions.Audience,
+                ValidateAudience = true,
+                IssuerSigningKey = AuthHelper.GetIssuerSigningKey(_authOptions.Key),
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false
+            };
+        
+        
     }
 }
