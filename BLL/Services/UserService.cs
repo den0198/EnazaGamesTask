@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Enums;
+using Common.TimeLockAddUser;
 using DAL.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,11 @@ namespace BLL.Services
 
         public async Task AddUser(AddUserRequest request)
         {
+            if (AddUserLock.Locker)
+                throw new Exception("Timeout add user, request later");
+
+            AddUserLock.Locker = true;
+            
             var userGroup = await _roleManager.FindByNameAsync(GroupCodesEnum.User.ToString());
             var userState = await _context.UserStates
                 .FirstOrDefaultAsync(item => item.Code == StateCodesEnum.Active);
