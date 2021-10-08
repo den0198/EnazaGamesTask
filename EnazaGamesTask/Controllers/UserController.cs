@@ -24,31 +24,23 @@ namespace EnazaGamesTask.Controllers
 
         [HttpGet]
         [Route("GetAllUsers")]
-        [ProducesResponseType(typeof(BaseResponse<List<UserResponse>>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequest), StatusCodes.Status500InternalServerError)]
         public async Task<List<UserResponse>> GetAllUsers() => 
             await _userService.GetAllUsers();
 
         [HttpGet]
         [Route("GetUserById")]
-        [ProducesResponseType(typeof(BaseResponse<UserResponse>),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequest), StatusCodes.Status500InternalServerError)]
         public async Task<UserResponse> GetUserById(int id) =>
             await _userService.GetUserById(id);
 
         [HttpPost]
         [Route("AddUser")]
         [AuthorizeUserGroup(GroupCodesEnum.Admin)]
-        [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequest), StatusCodes.Status500InternalServerError)]
         public async Task AddUser(AddUserRequest request) =>
             await _userService.AddUser(request);
         
         [HttpDelete]
         [Route("DeleteUserById")]
         [AuthorizeUserGroup(GroupCodesEnum.Admin)]
-        [ProducesResponseType(typeof(BaseResponse),StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequest), StatusCodes.Status500InternalServerError)]
         public async Task DeleteUserById(int id) =>
             await _userService.DeleteUserById(id);
     }
