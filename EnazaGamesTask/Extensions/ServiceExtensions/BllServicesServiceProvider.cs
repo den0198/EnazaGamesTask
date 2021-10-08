@@ -8,6 +8,7 @@ namespace EnazaGamesTask.Extensions.ServiceExtensions
         public static void AddBllServices(this IServiceCollection services)
         {
             services.AddTransient<AuthService>();
+            services.AddTransient<UserService>();
         }
     }
 }

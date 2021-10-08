@@ -1,5 +1,6 @@
 using EnazaGamesTask.Extensions.MiddlewareExtensions;
 using EnazaGamesTask.Extensions.ServiceExtensions;
+using EnazaGamesTask.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,8 @@ namespace EnazaGamesTask
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.AddCastMiddlewares();
+            
             #region Infrastructure
             
             app.UseHttpsRedirection();
