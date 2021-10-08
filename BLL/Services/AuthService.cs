@@ -20,7 +20,7 @@ namespace BLL.Services
         private readonly UserManager<User> _userManager;
         private readonly AuthOptions _authOptions;
 
-        public AuthService(UserManager<User> userManager, RoleManager<UserGroup> roleManager, IOptions<AuthOptions> authOptions)
+        public AuthService(UserManager<User> userManager, IOptions<AuthOptions> authOptions)
         {
             _userManager = userManager;
             _authOptions = authOptions.Value;

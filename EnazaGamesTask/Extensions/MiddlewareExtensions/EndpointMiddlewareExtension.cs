@@ -2,11 +2,10 @@
 
 namespace EnazaGamesTask.Extensions.MiddlewareExtensions
 {
-    public static class RoutingMiddlewareExtension
+    public static class EndpointMiddlewareExtension
     {
-        public static void UseAppRouting(this IApplicationBuilder app)
+        public static void UseAppEndpoints(this IApplicationBuilder app)
         {
-            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

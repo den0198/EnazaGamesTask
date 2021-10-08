@@ -36,10 +36,11 @@ namespace EnazaGamesTask
             #region Infrastructure
             
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseAuth();
+            app.UseAppEndpoints();
             app.UseAppSwagger();
-            app.UseAppRouting();
-
+            
             #endregion
             
             app.InitializationDatabase();

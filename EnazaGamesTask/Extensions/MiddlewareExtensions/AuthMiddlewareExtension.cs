@@ -4,10 +4,10 @@ namespace EnazaGamesTask.Extensions.MiddlewareExtensions
 {
     public static class AuthMiddlewareExtension
     {
-        public static void UseAuth(this IApplicationBuilder applicationBuilder)
+        public static void UseAuth(this IApplicationBuilder app)
         {
-            applicationBuilder.UseAuthentication();
-            applicationBuilder.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
     }
 }
