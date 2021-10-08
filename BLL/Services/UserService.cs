@@ -86,6 +86,7 @@ namespace BLL.Services
                 UserName = request.Login,
                 Login = request.Login,
                 Password = request.Password,
+                CreatedDate = DateTime.Now,
                 UserGroup = userGroup,
                 UserState = userState
             };
