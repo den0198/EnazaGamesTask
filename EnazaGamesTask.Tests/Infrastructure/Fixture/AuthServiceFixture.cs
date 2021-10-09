@@ -1,9 +1,6 @@
 ﻿using System.Linq;
 using BLL.Services;
 using EnazaGamesTask.Tests.Infrastructure.Helpers;
-using Microsoft.Extensions.Options;
-using Models.Options;
-using Moq;
 
 namespace EnazaGamesTask.Tests.Infrastructure.Fixture
 {
@@ -15,9 +12,9 @@ namespace EnazaGamesTask.Tests.Infrastructure.Fixture
                 .ToList();
             
             var userManager = UserManagerHelper.GetMock(users).Object;
-            var authOptions = new Mock<IOptions<AuthOptions>>();
+            var authOptions = AuthOptionHelper.GetMock().Object;
             
-            return new AuthService(userManager,authOptions.Object);
+            return new AuthService(userManager,authOptions);
         }
     }
     

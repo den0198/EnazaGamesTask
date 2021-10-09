@@ -10,50 +10,43 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
 {
     public static class UserManagerHelper
     {
-        public static Mock<UserManager<TUser>> GetMock<TUser>(List<TUser> ls) where TUser : User
+        public static Mock<UserManager<User>> GetMock(List<User> ls)
         {
-            var store = new Mock<IUserStore<TUser>>();
-            var mgr = new Mock<UserManager<TUser>>(store.Object, null, null, null, null, null, null, null, null);
-            mgr.Object.UserValidators.Add(new UserValidator<TUser>());
-            mgr.Object.PasswordValidators.Add(new PasswordValidator<TUser>());
+            var store = new Mock<IUserStore<User>>();
+            var mgr = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            mgr.Object.UserValidators.Add(new UserValidator<User>());
+            mgr.Object.PasswordValidators.Add(new PasswordValidator<User>());
+            
+            ls.ForEach(item =>
+            {
+                mgr.Setup(x =>
+                        x.FindByNameAsync(It.IsIn(item.Login)))
+                    .ReturnsAsync(ls.FirstOrDefault());
 
-            mgr.Setup(x =>
-                    x.FindByNameAsync(It.IsIn("TestUser")))
-                .ReturnsAsync(ls.FirstOrDefault());
+                mgr.Setup(x =>
+                        x.CheckPasswordAsync(It.IsAny<User>(),It.IsIn(item.Password)))
+                    .ReturnsAsync(true);
+            
+                mgr.Setup(x =>
+                        x.GetClaimsAsync(It.IsAny<User>()))
+                    .ReturnsAsync(new List<Claim> { new Claim(ClaimTypes.Email, item.Login)});
+                
+                
+            });
 
-            mgr.Setup(x =>
-                    x.CheckPasswordAsync(It.IsAny<TUser>(),It.IsIn("qwe123QWE!@#")))
-                .ReturnsAsync(true);
             
             mgr.Setup(x =>
-                    x.GetClaimsAsync(It.IsAny<TUser>()))
-                .ReturnsAsync(new List<Claim> { new Claim(ClaimTypes.Email, ls.FirstOrDefault()?.Login)});
-
-            mgr.Setup(x =>
-                    x.GenerateUserTokenAsync(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                    x.GenerateUserTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync("akslhdjkasgbhdjkvbagwyueudajkbsdnkm");
 
             mgr.Setup(x =>
-                    x.RemoveAuthenticationTokenAsync(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                    x.RemoveAuthenticationTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => IdentityResult.Success);
             
             mgr.Setup(x =>
-                    x.SetAuthenticationTokenAsync(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                    x.SetAuthenticationTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => IdentityResult.Success);
-
-            mgr.Setup(x => 
-                x.DeleteAsync(It.IsAny<TUser>()))
-                .ReturnsAsync(IdentityResult.Success);
             
-            mgr.Setup(x => 
-                x.CreateAsync(It.IsAny<TUser>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success)
-                .Callback<TUser, string>((x, y) => ls.Add(x));
-            
-            mgr.Setup(x => 
-                x.UpdateAsync(It.IsAny<TUser>()))
-                .ReturnsAsync(IdentityResult.Success);
-
             return mgr;
         }
     }
