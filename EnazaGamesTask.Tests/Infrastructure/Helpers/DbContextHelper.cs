@@ -1,13 +1,16 @@
 ﻿using DAL.EntityFramework;
 using EnazaGamesTask.Tests.Infrastructure.Moсks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Models.Entities;
 
 namespace EnazaGamesTask.Tests.Infrastructure.Helpers
 {
-    public class DbContextHelper
+    public class DbContextHelper : IdentityDbContext<User, UserGroup, int>
     {
-        public DbContextHelper()
+        public DbContextHelper() 
         {
             var builder = new DbContextOptionsBuilder<AppDbContext>();
             builder
@@ -16,10 +19,17 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
                     x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
             var options = builder.Options;
-            Context = new AppDbContext(options);
             
+            Context = new AppDbContext(options);
+
+            #region AddMoks
+
+            Context.AddRange(UserGroupMock.GetMany());
+            Context.AddRange(UserStateMock.GetMany());
             Context.AddRange(UserMock.GetMany());
 
+            #endregion
+            
             Context.SaveChanges();
         }
 
