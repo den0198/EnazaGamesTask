@@ -28,7 +28,7 @@ namespace BLL.Services
 
         public async Task<List<UserResponse>> GetAllUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _context.Users.ToListAsync();
             
             //сдесь надо было испоьзовать Mappseter, но я решил показать как собираю модельку
             var userResponseList = new List<UserResponse>();

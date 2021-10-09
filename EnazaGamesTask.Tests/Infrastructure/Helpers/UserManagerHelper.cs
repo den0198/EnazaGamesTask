@@ -1,53 +1,57 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Models.Entities;
 using Moq;
-using Moq.Protected;
 
 namespace EnazaGamesTask.Tests.Infrastructure.Helpers
 {
     public static class UserManagerHelper
     {
-        public static Mock<UserManager<User>> GetMock(List<User> ls)
+        public static Mock<UserManager<User>> GetMock(List<User> users)
         {
             var store = new Mock<IUserStore<User>>();
-            var mgr = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            mgr.Object.UserValidators.Add(new UserValidator<User>());
-            mgr.Object.PasswordValidators.Add(new PasswordValidator<User>());
             
-            ls.ForEach(item =>
-            {
-                mgr.Setup(x =>
-                        x.FindByNameAsync(It.IsIn(item.Login)))
-                    .ReturnsAsync(ls.FirstOrDefault());
+            var mock = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
 
-                mgr.Setup(x =>
-                        x.CheckPasswordAsync(It.IsAny<User>(),It.IsIn(item.Password)))
+            mock.Setup(x =>
+                    x.Users)
+                .Returns(users.AsQueryable());
+            
+            users.ForEach(item =>
+            {
+                mock.Setup(x =>
+                        x.FindByNameAsync(item.Login))
+                    .ReturnsAsync(users.FirstOrDefault());
+
+                mock.Setup(x =>
+                        x.CheckPasswordAsync(It.IsAny<User>(),item.Password))
                     .ReturnsAsync(true);
             
-                mgr.Setup(x =>
+                mock.Setup(x =>
                         x.GetClaimsAsync(It.IsAny<User>()))
                     .ReturnsAsync(new List<Claim> { new Claim(ClaimTypes.Email, item.Login)});
-                
                 
             });
 
             
-            mgr.Setup(x =>
+            mock.Setup(x =>
                     x.GenerateUserTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync("akslhdjkasgbhdjkvbagwyueudajkbsdnkm");
+                .ReturnsAsync("Test token");
 
-            mgr.Setup(x =>
+            mock.Setup(x =>
                     x.RemoveAuthenticationTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => IdentityResult.Success);
             
-            mgr.Setup(x =>
+            mock.Setup(x =>
                     x.SetAuthenticationTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => IdentityResult.Success);
             
-            return mgr;
+            return mock;
         }
     }
 }

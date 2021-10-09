@@ -1,4 +1,6 @@
-﻿using EnazaGamesTask.Tests.Infrastructure.Fixture;
+﻿using System.Linq;
+using EnazaGamesTask.Tests.Infrastructure.Fixture;
+using EnazaGamesTask.Tests.Infrastructure.Helpers;
 using Models.DTOs.Requests;
 using Xunit;
 
@@ -15,16 +17,17 @@ namespace EnazaGamesTask.Tests.Services
         
         
         [Fact]
-        public async void ItShouldUserFirstUserStateNotNul()
+        public async void ItShouldSignIlIfHaveUser()
         {
             //arrange
             var sut = _fixture.Create();
 
             //act
+            var firstUser = MockDbContextHelper.GetInMemoryContext().Users.FirstOrDefault();
             var actual = await sut.SignIn(new AddUserRequest
             {
-                Login = "TestUser",
-                Password = "qwe123QWE!@#"
+                Login = firstUser?.Login,
+                Password = firstUser?.Password
             });
 
             //assert
