@@ -11,6 +11,7 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
     public class DbContextHelper
     {
         private readonly DbContextOptions<AppDbContext> _options;
+        private static readonly object _obj = new object();
 
         public DbContextHelper()
         {
@@ -26,27 +27,25 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
             
             #region AddMoks
             
-            using var context = new AppDbContext(_options);
+            lock (_obj)
+            {
+                using var context = new AppDbContext(_options);
+                
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+            
+                context.AddRange(UserGroupMock.GetMany());
+                context.AddRange(UserStateMock.GetMany());
+                context.AddRange(UserMock.GetMany());
+            
+                context.SaveChanges();
 
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            
-            context.AddRange(UserGroupMock.GetMany());
-            context.AddRange(UserStateMock.GetMany());
-            context.AddRange(UserMock.GetMany());
-            
-            context.SaveChanges();
-
-            var users = context.Users
-                .Include(x => x.UserGroup)
-                .Include(x => x.UserState)
-                .ToList();;
-            
-            UserManager = UserManagerHelper.GetMock(users).Object;
-            RoleManager = RoleManagerHelper.GetMock(users).Object;
+                var users = context.Users.ToList();
+                UserManager = UserManagerHelper.GetMock(users).Object;
+                RoleManager = RoleManagerHelper.GetMock(users).Object;   
+            }
             
             #endregion
-            
         }
 
         public UserManager<User> UserManager { get; }
