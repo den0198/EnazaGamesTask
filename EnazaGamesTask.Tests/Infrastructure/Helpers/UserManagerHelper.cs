@@ -44,10 +44,6 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
                         { new Claim(ClaimTypes.Email, item.Login)});
                 
             });
-
-            mock.Setup(x =>
-                    x.CheckPasswordAsync(It.IsAny<User>(),It.IsAny<string>()))
-                .ReturnsAsync(false);
             
             mock.Setup(x =>
                     x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
