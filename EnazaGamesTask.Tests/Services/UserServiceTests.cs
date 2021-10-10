@@ -1,22 +1,24 @@
-﻿using EnazaGamesTask.Tests.Infrastructure.Fixture;
+﻿using BLL.Services;
+using EnazaGamesTask.Tests.Infrastructure.Helpers;
 using Xunit;
 
 namespace EnazaGamesTask.Tests.Services
 {
-    public class UserServiceTests : IClassFixture<UserServiceFixture>
+    public class UserServiceTests 
     {
-        private readonly UserServiceFixture _fixture;
+        private readonly DbContextHelper _db; 
 
-        public UserServiceTests(UserServiceFixture fixture)
+        public UserServiceTests()
         {
-            _fixture = fixture;
+            _db = new DbContextHelper();
         }
         
         [Fact]
         public async void ItShouldGetAllUser()
         {
             //arrange
-            var sut = _fixture.Create();
+            await using var context = _db.Create();
+            var sut = new UserService(_db.UserManager, _db.RoleManager, context);
 
             //act
             var actual = await sut.GetAllUsers();

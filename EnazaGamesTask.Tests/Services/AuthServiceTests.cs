@@ -1,33 +1,33 @@
-﻿using System.Linq;
-using EnazaGamesTask.Tests.Infrastructure.Fixture;
+﻿using BLL.Services;
 using EnazaGamesTask.Tests.Infrastructure.Helpers;
+using EnazaGamesTask.Tests.Infrastructure.Moсks;
 using Models.DTOs.Requests;
 using Xunit;
 
 namespace EnazaGamesTask.Tests.Services
 {
-    public class AuthServiceTests : IClassFixture<AuthServiceFixture>
+    public class AuthServiceTests
     {
-        private readonly AuthServiceFixture _fixture;
+        private readonly DbContextHelper _db;
 
-        public AuthServiceTests(AuthServiceFixture fixture)
+        public AuthServiceTests()
         {
-            _fixture = fixture;
+            _db = new DbContextHelper();
         }
-        
         
         [Fact]
         public async void ItShouldSignIlIfHaveUser()
         {
             //arrange
-            var sut = _fixture.Create();
+            var authOptions = AuthOptionHelper.GetMock().Object;
+            var sut = new AuthService(_db.UserManager,authOptions); 
 
             //act
-            var firstUser = MockDbContextHelper.GetInMemoryContext().Users.FirstOrDefault();
+            var user = UserMock.GetOne();
             var actual = await sut.SignIn(new AddUserRequest
             {
-                Login = firstUser?.Login,
-                Password = firstUser?.Password
+                Login = user!.Login,
+                Password = user!.Password
             });
 
             //assert

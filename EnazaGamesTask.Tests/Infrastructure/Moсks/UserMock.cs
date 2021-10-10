@@ -11,7 +11,7 @@ namespace EnazaGamesTask.Tests.Infrastructure.Moсks
             yield return GetOne();
         }
 
-        private static User GetOne
+        public static User GetOne
             (int id = 1, int userGroupId = 1, int userStateId = 1) =>
             new User
             {
