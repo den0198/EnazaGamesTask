@@ -61,7 +61,7 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
             mock.Setup(x =>
                     x.VerifyUserTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>(),
                         It.IsNotIn(TEST_REFRESH_TOKEN)))
-                .ReturnsAsync(true);
+                .ReturnsAsync(false);
 
             mock.Setup(x =>
                     x.RemoveAuthenticationTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
