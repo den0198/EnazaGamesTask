@@ -19,6 +19,8 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
                 .UseInMemoryDatabase("EnazaGamesTask.Tests")
                 .ConfigureWarnings(x => 
                     x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+
+            builder.UseLazyLoadingProxies();
             
             _options = builder.Options;
             
