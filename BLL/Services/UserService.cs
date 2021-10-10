@@ -92,7 +92,6 @@ namespace BLL.Services
             };
             
             var resultCreateUser = await _userManager.CreateAsync(newUser, newUser.Password);
-
             
             if (!resultCreateUser.Succeeded)
             {

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DAL.EntityFramework;
 using EnazaGamesTask.Tests.Infrastructure.Moсks;
 using Microsoft.AspNetCore.Identity;
@@ -41,8 +42,10 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
                 context.SaveChanges();
 
                 var users = context.Users.ToList();
+                var userGroups = context.Roles.ToList();
+                
                 UserManager = UserManagerHelper.GetMock(users).Object;
-                RoleManager = RoleManagerHelper.GetMock(users).Object;   
+                RoleManager = RoleManagerHelper.GetMock(userGroups).Object;   
             }
             
             #endregion
