@@ -9,6 +9,7 @@ namespace EnazaGamesTask.Tests.Infrastructure.Moсks
         public static IEnumerable<User> GetMany()
         {
             yield return GetOne();
+            yield return GetOne(2, 2);
         }
 
         public static User GetOne

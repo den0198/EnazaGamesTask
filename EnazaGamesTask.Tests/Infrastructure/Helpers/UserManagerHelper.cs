@@ -19,36 +19,37 @@ namespace EnazaGamesTask.Tests.Infrastructure.Helpers
             mock.Setup(x =>
                     x.Users)
                 .Returns(users.AsQueryable());
-            
+
             users.ForEach(item =>
             {
                 mock.Setup(x =>
                         x.FindByIdAsync(item.Id.ToString()))
                     .ReturnsAsync(item);
-                
+
                 mock.Setup(x =>
                         x.FindByNameAsync(item.Login))
                     .ReturnsAsync(item);
 
                 mock.Setup(x =>
-                        x.CheckPasswordAsync(item,item.Password))
+                        x.CheckPasswordAsync(item, item.Password))
                     .ReturnsAsync(true);
-                
+
                 mock.Setup(x =>
-                        x.CheckPasswordAsync(item,It.IsNotIn(item.Password)))
+                        x.CheckPasswordAsync(item, It.IsNotIn(item.Password)))
                     .ReturnsAsync(false);
-            
+
                 mock.Setup(x =>
                         x.GetClaimsAsync(item))
-                    .ReturnsAsync(new List<Claim> 
-                        { new Claim(ClaimTypes.Email, item.Login)});
-                
+                    .ReturnsAsync(new List<Claim>
+                        { new Claim(ClaimTypes.Email, item.Login) });
+
+                mock.Setup(x =>
+                        x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                    .Returns<User, string>(async (user, password) =>
+                        item.UserName == user.UserName ? IdentityResult.Failed() : IdentityResult.Success
+                    );
             });
-            
-            mock.Setup(x =>
-                    x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success);
-            
+
             mock.Setup(x =>
                     x.GenerateUserTokenAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(TEST_REFRESH_TOKEN);
